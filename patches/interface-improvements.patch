@@ -1,0 +1,326 @@
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -6,6 +6,7 @@
+ import { organizePoliticsContent } from './politics-navigation.js'
+ import { matchShortcut, optionShortcut, shortcutCharacter } from './keyboard-shortcuts.js'
+ import { fillNavigationTarget } from './fill-navigation.js'
++import { getOptionSections } from './option-display.js'
+ 
+ const MnemonicLibrary = lazy(() => import('./MnemonicLibrary.jsx'))
+ 
+@@ -722,6 +723,7 @@
+   const [mnemonicFavorites, setMnemonicFavorites] = useState([])
+   const searchInputRef = useRef(null)
+   const [typeFilter, setTypeFilter] = useState('全部题型')
++  const [optionDisplayMode, setOptionDisplayMode] = useState('grouped')
+   const [groupIndex, setGroupIndex] = useState(0)
+   const [jumpGroupId, setJumpGroupId] = useState('')
+   const [selections, setSelections] = useState({})
+@@ -766,6 +768,7 @@
+     setSidebarCollapsed(window.innerWidth <= 720 ? true : readLocalStorage('med-sidebar-collapsed', false))
+     setEvidenceCollapsed(readLocalStorage('med-evidence-collapsed', false))
+     setTopbarCollapsed(readLocalStorage('study-topbar-collapsed', false))
++    setOptionDisplayMode(readLocalStorage('study-option-display', 'grouped') === 'original' ? 'original' : 'grouped')
+     setStorageReady(true)
+   }, [])
+ 
+@@ -856,6 +859,7 @@
+   useEffect(() => { if (storageReady) window.localStorage.setItem('med-sidebar-collapsed', JSON.stringify(sidebarCollapsed)) }, [sidebarCollapsed, storageReady])
+   useEffect(() => { if (storageReady) window.localStorage.setItem('med-evidence-collapsed', JSON.stringify(evidenceCollapsed)) }, [evidenceCollapsed, storageReady])
+   useEffect(() => { if (storageReady) window.localStorage.setItem('study-topbar-collapsed', JSON.stringify(topbarCollapsed)) }, [topbarCollapsed, storageReady])
++  useEffect(() => { if (storageReady) window.localStorage.setItem('study-option-display', JSON.stringify(optionDisplayMode)) }, [optionDisplayMode, storageReady])
+ 
+   const favoriteCounts = useMemo(() => {
+     const byTopic = {}
+@@ -945,6 +949,21 @@
+     })
+   }
+ 
++  function updateAnswerInput(stemIndex, value) {
++    if (isSubmitted) return
++    const stem = group.stems[stemIndex]
++    const options = group.options.filter((option) => !stem.optionCategory || option.category === stem.optionCategory)
++    const aliases = new Map(options.flatMap((option) => [option.key, option.displayKey || option.key].map((alias) => [String(alias).toUpperCase(), option.key])))
++    const parsed = [...String(value).toUpperCase()].map((character) => aliases.get(character)).filter(Boolean)
++    const multi = isMultiStem(group, stem)
++    const ordered = isRankingStem(stem)
++    setSelections((previous) => {
++      const nextGroup = { ...(previous[answerStorageId] || {}) }
++      nextGroup[stemIndex] = ordered ? unique(parsed) : (multi ? normalizeSelection(parsed) : parsed.slice(-1))
++      return { ...previous, [answerStorageId]: nextGroup }
++    })
++  }
++
+   function updateFillSelection(stemIndex, blankIndex, value) {
+     if (isSubmitted) return
+     setSelections((previous) => {
+@@ -1299,7 +1318,7 @@
+           </div> : null}
+           <div className="top-actions">
+             <label className="search-box"><Icon name="search" size={18} /><input ref={searchInputRef} value={viewMode === 'mnemonics' ? mnemonicSearch : search} onChange={(event) => { if (viewMode === 'mnemonics') setMnemonicSearch(event.target.value); else { setSearch(event.target.value); setJumpGroupId(''); setGroupIndex(0) } }} placeholder={viewMode === 'mnemonics' ? '搜索口诀 / 疾病 / 知识点' : '搜索题目 / 关键词'} aria-label={viewMode === 'mnemonics' ? '搜索五科口诀' : '搜索题目'} />{(viewMode === 'mnemonics' ? mnemonicSearch : search) ? <button className="search-clear" aria-label="清空搜索" type="button" onClick={() => { if (viewMode === 'mnemonics') setMnemonicSearch(''); else { setSearch(''); setGroupIndex(0) } searchInputRef.current?.focus() }}>×</button> : <kbd>⌘ K</kbd>}</label>
+-            {viewMode === 'mnemonics' ? <label className="filter-box"><Icon name="sliders" size={17} /><select aria-label="筛选口诀章节" value={mnemonicChapter} onChange={event => setMnemonicChapter(event.target.value)}><option value="">全部章节</option>{mnemonicChapters.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select><Icon name="chevron" size={15} /></label> : <><label className="filter-box"><Icon name="sliders" size={17} /><select value={typeFilter} onChange={(event) => { setTypeFilter(event.target.value); setJumpGroupId(''); setGroupIndex(0) }}><option>全部题型</option><option>B型题</option><option>单项选择</option><option>填空题</option><option>排序题</option><option>多项选择</option><option>匹配 / 归类</option><option>判断订正</option><option>思路训练</option><option>画图与简答</option><option>复盘笔记</option><option>原题页核对</option></select><Icon name="chevron" size={15} /></label><button className="icon-button" aria-label="设置"><Icon name="settings" size={19} /></button></>}
++            {viewMode === 'mnemonics' ? <label className="filter-box"><Icon name="sliders" size={17} /><select aria-label="筛选口诀章节" value={mnemonicChapter} onChange={event => setMnemonicChapter(event.target.value)}><option value="">全部章节</option>{mnemonicChapters.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select><Icon name="chevron" size={15} /></label> : <><label className="filter-box"><Icon name="sliders" size={17} /><select value={typeFilter} onChange={(event) => { setTypeFilter(event.target.value); setJumpGroupId(''); setGroupIndex(0) }}><option>全部题型</option><option>B型题</option><option>单项选择</option><option>填空题</option><option>排序题</option><option>多项选择</option><option>匹配 / 归类</option><option>判断订正</option><option>思路训练</option><option>画图与简答</option><option>复盘笔记</option><option>原题页核对</option></select><Icon name="chevron" size={15} /></label></>}
+           </div>
+         </header>
+         <button className="topbar-toggle" onClick={() => setTopbarCollapsed((value) => !value)} aria-controls="study-topbar study-chapter-controls" aria-expanded={!topbarCollapsed} aria-label={topbarCollapsed ? '展开顶部栏' : '收起顶部栏'} title={topbarCollapsed ? '展开顶部栏' : '收起顶部栏'}>
+@@ -1364,12 +1383,12 @@
+           {showNote && <div className="note-strip"><Icon name="note" size={17} /><input value={notes[groupStorageId] || ''} onChange={(event) => setNotes((previous) => ({ ...previous, [groupStorageId]: event.target.value }))} placeholder="写下你的易错点或记忆口诀…" /></div>}
+ 
+           <AdaptiveStudyGrid group={group}>
+-          {group.options.length > 0 && !group.judgement && <OptionBank group={group} />}
++          {group.options.length > 0 && !group.judgement && <OptionBank group={group} displayMode={optionDisplayMode} onDisplayModeChange={setOptionDisplayMode} />}
+           <div className="question-side">
+           <section className="question-card" ref={questionCardRef} onClickCapture={lockStem} onFocusCapture={lockStem}>
+             <div className="question-card-top"><span className="question-type">{group.kindLabel}</span><span>题组 {groupIndex + 1} / {filteredGroups.length}</span>{group.hideSource ? null : <span>来源页 {group.page}</span>}</div>
+             {group.sharedStem ? <div className="shared-stem-panel"><strong>共用题干</strong><p>{group.sharedStem}</p><span>以下 {group.sharedQuestionCount || group.stems.length} 题共用此题干</span></div> : null}
+-            <QuestionList subject={subject} group={group} selections={currentSelections} submitted={isSubmitted} onSelect={updateSelection} onFill={updateFillSelection} activeStemIndex={activeStemIndex} />
++            <QuestionList subject={subject} group={group} selections={currentSelections} submitted={isSubmitted} onSelect={updateSelection} onInput={updateAnswerInput} onFill={updateFillSelection} activeStemIndex={activeStemIndex} />
+             <div className="question-card-bottom">
+               {isSubmitted ? <div className={`submit-summary ${waitingForAnswers ? 'pending-answer-summary' : ''}`}><Icon name={waitingForAnswers ? 'file' : 'check'} size={18} /><span>{group.selfReview ? '草稿已保存 · 请对照参考要点自评' : waitingForAnswers ? '已保存选择 · 待补答案，暂不计分' : group.stems.every((stem) => stem.answerState === '暂无参考答案') ? '已提交 · 暂无参考答案，本题不计分' : `已提交 · ${group.stems.filter((stem, index) => !isUnresolvedStem(stem) && stemIsCorrect(currentSelections[index] || [], stem)).length} / ${group.stems.filter((stem) => !isUnresolvedStem(stem)).length} 个题干正确${group.stems.some(isUnresolvedStem) ? ` · ${group.stems.filter(isUnresolvedStem).length} 个待原题核对` : ''}`}</span></div> : <span className="hint-text">{group.selfReview ? '先写下思路，保存后展开参考要点；可随时继续修改草稿。' : waitingForAnswers ? '答案待补；可先完成匹配并保存选择，之后继续修改。' : '完成后按 Enter 或点击按钮提交；排序题按点击先后记录，填空题按空格顺序判分。'}</span>}
+               <button className={`primary-button ${isSubmitted ? 'redo-button' : ''}`} onClick={isSubmitted ? redoGroup : submitGroup}>{group.selfReview ? (isSubmitted ? '继续修改草稿' : '保存并查看参考') : waitingForAnswers ? (isSubmitted ? '修改本组选择' : '保存本组选择') : (isSubmitted ? '重新作答' : '提交本题组')}<Icon name={isSubmitted ? 'right' : 'arrow'} size={17} /></button>
+@@ -1395,16 +1414,19 @@
+   )
+ }
+ 
+-function OptionBank({ group }) {
+-  const categories = unique(group.options.map((option) => option.category).filter(Boolean))
+-  const sections = group.optionBankSections?.length
+-    ? group.optionBankSections.map((section) => ({ title: section.title, options: section.keys.map((key) => group.options.find((option) => option.key === key)).filter(Boolean) }))
+-    : categories.map((category) => ({ title: category, options: group.options.filter((option) => option.category === category) }))
+-  const categorized = sections.length > 0
++function OptionBank({ group, displayMode, onDisplayModeChange }) {
++  const sections = getOptionSections(group, displayMode)
++  const categorized = displayMode === 'grouped' && sections.length > 0
+   return (
+-    <aside className={`option-bank option-rail ${categorized ? 'categorized-option-bank' : ''}`}>
+-      <div className="section-label"><span>{group.sharedStem ? '各题选项' : '共用选项'}</span><em>{group.kindLabel}</em></div>
+-      {categorized ? <div className="option-category-list">{sections.map((section) => <section className="option-category" key={section.title}><h3>{section.title}</h3><div className="option-grid">{section.options.map((option) => <div className="shared-option" key={option.key}><b>{option.displayKey || option.key}</b><span>{option.label}</span></div>)}</div></section>)}</div> : <div className="option-grid">{group.options.map((option) => <div className="shared-option" key={option.key}><b>{option.displayKey || option.key}</b><span>{option.label}</span></div>)}</div>}
++    <aside className={`option-bank option-rail ${categorized ? 'categorized-option-bank' : ''}`} aria-label="共用选项区">
++      <div className="option-bank-heading">
++        <div className="section-label"><span>{group.sharedStem ? '各题选项' : '共用选项'}</span><em>{group.kindLabel}</em></div>
++        <div className="option-view-switch" role="group" aria-label="选项排列方式">
++          <button type="button" className={displayMode === 'grouped' ? 'active' : ''} aria-pressed={displayMode === 'grouped'} onClick={() => onDisplayModeChange('grouped')} title="按症状、检查和治疗等内容分类；不改变选项与答案">分类</button>
++          <button type="button" className={displayMode === 'original' ? 'active' : ''} aria-pressed={displayMode === 'original'} onClick={() => onDisplayModeChange('original')} title="按原题选项顺序显示">原序</button>
++        </div>
++      </div>
++      {categorized ? <div className="option-category-list">{sections.map((section) => <section className="option-category" key={section.title}><h3><span>{section.title}</span><em>{section.options.length} 项</em></h3><div className="option-grid">{section.options.map((option) => <div className="shared-option" key={option.key}><b>{option.displayKey || option.key}</b><span>{option.label}</span></div>)}</div></section>)}</div> : <div className="option-grid">{group.options.map((option) => <div className="shared-option" key={option.key}><b>{option.displayKey || option.key}</b><span>{option.label}</span></div>)}</div>}
+     </aside>
+   )
+ }
+@@ -1439,16 +1461,16 @@
+   )
+ }
+ 
+-function QuestionList({ subject, group, selections, submitted, onSelect, onFill, activeStemIndex }) {
+-  const rows = <div className="stem-list">{group.stems.map((stem, index) => <StemRow key={`${subject}-${group.id}-${index}`} group={group} stem={stem} index={index} selection={selections[index] || []} submitted={submitted} onSelect={onSelect} onFill={onFill} active={activeStemIndex === index} />)}</div>
++function QuestionList({ subject, group, selections, submitted, onSelect, onInput, onFill, activeStemIndex }) {
++  const rows = <div className="stem-list">{group.stems.map((stem, index) => <StemRow key={`${subject}-${group.id}-${index}`} group={group} stem={stem} index={index} selection={selections[index] || []} submitted={submitted} onSelect={onSelect} onInput={onInput} onFill={onFill} active={activeStemIndex === index} />)}</div>
+   if (group.answerLayout === 'rows' || !group.options.some((option) => option.category) || !group.stems.some((stem) => stem.optionCategory)) return rows
+   const sizes = new Map()
+   for (const option of group.options) sizes.set(option.category, (sizes.get(option.category) || 0) + 1)
+-  const minTableWidth = Math.max(480, 328 + Math.max(...sizes.values()) * 35)
+-  return <AdaptiveAnswerLayout minTableWidth={minTableWidth} table={<CategorizedAnswerTable group={group} selections={selections} submitted={submitted} onSelect={onSelect} activeStemIndex={activeStemIndex} />}>{rows}</AdaptiveAnswerLayout>
++  const minTableWidth = Math.max(580, 428 + Math.max(...sizes.values()) * 35)
++  return <AdaptiveAnswerLayout minTableWidth={minTableWidth} table={<CategorizedAnswerTable group={group} selections={selections} submitted={submitted} onSelect={onSelect} onInput={onInput} activeStemIndex={activeStemIndex} />}>{rows}</AdaptiveAnswerLayout>
+ }
+ 
+-function CategorizedAnswerTable({ group, selections, submitted, onSelect, activeStemIndex }) {
++function CategorizedAnswerTable({ group, selections, submitted, onSelect, onInput, activeStemIndex }) {
+   const categories = unique(group.stems.map((stem) => stem.optionCategory).filter(Boolean))
+ 
+   return (
+@@ -1466,10 +1488,11 @@
+                     <th className="answer-table-number">题号</th>
+                     <th className="answer-table-stem">题干</th>
+                     {options.map((option) => <th key={option.key} className="answer-table-option" title={option.label}>{option.displayKey || option.key}</th>)}
++                    <th className="answer-table-input-heading">输入答案</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+-                  {rows.map(({ stem, index }) => <CategorizedAnswerRow key={index} group={group} stem={stem} index={index} options={options} selection={selections[index] || []} submitted={submitted} onSelect={onSelect} active={activeStemIndex === index} />)}
++                  {rows.map(({ stem, index }) => <CategorizedAnswerRow key={index} group={group} stem={stem} index={index} options={options} selection={selections[index] || []} submitted={submitted} onSelect={onSelect} onInput={onInput} active={activeStemIndex === index} />)}
+                 </tbody>
+               </table>
+             </div>
+@@ -1480,7 +1503,7 @@
+   )
+ }
+ 
+-function CategorizedAnswerRow({ group, stem, index, options, selection, submitted, onSelect, active }) {
++function CategorizedAnswerRow({ group, stem, index, options, selection, submitted, onSelect, onInput, active }) {
+   const answer = answerLetters(stem)
+   const multi = isMultiStem(group, stem)
+   const unresolved = isUnresolvedStem(stem)
+@@ -1505,14 +1528,15 @@
+           const stateLabel = isMissed ? '，漏选' : (isWrong ? '，错选' : '')
+           return <td key={item} className="answer-table-cell"><button type="button" data-option-label={label} aria-pressed={active} aria-label={`${String(index + 1).padStart(2, '0')}题，选项 ${label}${stateLabel}`} className={`answer-chip ${active ? 'active' : ''} ${isAnswer ? 'answer' : ''} ${isMissed ? 'missed' : ''} ${isWrong ? 'wrong' : ''}`} onClick={() => onSelect(index, item)} disabled={submitted}>{label}</button></td>
+         })}
++        <td className="answer-table-input"><input aria-label={`第${index + 1}题输入答案`} value={selection.map((item) => options.find((option) => option.key === item)?.displayKey || item).join('')} onChange={(event) => onInput(index, event.target.value)} disabled={submitted} placeholder="如 BDE" autoCapitalize="characters" autoComplete="off" /></td>
+       </tr>
+-      {submitted && <tr className={`answer-table-result-row ${unresolved ? 'pending' : (correct ? 'ok' : 'bad')}`}><td colSpan={options.length + 2}><span><Icon name={unresolved ? 'file' : (correct ? 'check' : 'alert')} size={15} />{unresolved ? unresolvedResult : (correct ? '正确' : `${group.answerSourceLabel || '讲义答案'}：${answerDisplay}`)}{missed && <span className="missed-legend">橙色 = 漏选</span>}</span></td></tr>}
+-      {submitted && (stem.explanation || stem.knowledgeConnections?.length) ? <tr className="answer-table-study-row"><td colSpan={options.length + 2}><QuestionStudyNotes stem={stem} /></td></tr> : null}
++      {submitted && <tr className={`answer-table-result-row ${unresolved ? 'pending' : (correct ? 'ok' : 'bad')}`}><td colSpan={options.length + 3}><span><Icon name={unresolved ? 'file' : (correct ? 'check' : 'alert')} size={15} />{unresolved ? unresolvedResult : (correct ? '正确' : `${group.answerSourceLabel || '讲义答案'}：${answerDisplay}`)}{missed && <span className="missed-legend">橙色 = 漏选</span>}</span></td></tr>}
++      {submitted && (stem.explanation || stem.knowledgeConnections?.length) ? <tr className="answer-table-study-row"><td colSpan={options.length + 3}><QuestionStudyNotes stem={stem} /></td></tr> : null}
+     </>
+   )
+ }
+ 
+-function StemRow({ group, stem, index, selection, submitted, onSelect, onFill, active: keyboardActive }) {
++function StemRow({ group, stem, index, selection, submitted, onSelect, onInput, onFill, active: keyboardActive }) {
+   const answer = isFillStem(stem) ? answerValues(stem) : answerLetters(stem)
+   const multi = isMultiStem(group, stem)
+   const ordered = isRankingStem(stem)
+@@ -1556,6 +1580,7 @@
+             </div>
+           })}</div>
+           : <BalancedAnswerChoices count={choiceOptions.length} judgement={group.judgement}>{choiceOptions.map(renderChoiceButton)}</BalancedAnswerChoices>)}
++      {!fill && !selfReview && !group.judgement && choiceOptions.every((option) => String(option.displayKey || option.key).length === 1) && <label className="answer-text-entry"><span>输入答案</span><input aria-label={`第${index + 1}题输入答案`} value={selection.map((item) => choiceOptions.find((option) => option.key === item)?.displayKey || item).join('')} onChange={(event) => onInput(index, event.target.value)} disabled={submitted} placeholder={multi ? '如 BDE' : '如 A'} autoCapitalize="characters" autoComplete="off" /></label>}
+       {submitted && <div className={`result-line ${unresolved ? 'pending' : (correct ? 'ok' : 'bad')}`}><Icon name={unresolved ? 'file' : (correct ? 'check' : 'alert')} size={15} />{selfReview ? '草稿已保存 · 对照下方参考要点自评' : unresolved ? unresolvedResult : (correct ? '正确' : `${group.answerSourceLabel || '讲义答案'}：${answerDisplay}`)}{missed && <span className="missed-legend">橙色 = 漏选</span>}</div>}
+       {submitted ? <QuestionStudyNotes stem={stem} /> : null}
+     </div>
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -1,7 +1,7 @@
+ :root {
+-  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+-  color: #142035;
+-  background: #f7f9fc;
++  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
++  color: #0f0f14;
++  background: #fcfbf8;
+   font-synthesis: none;
+   text-rendering: optimizeLegibility;
+   --ink: #172238;
+@@ -18,7 +18,7 @@
+   --shadow: 0 18px 40px rgba(38, 61, 92, .07);
+ }
+ * { box-sizing: border-box; }
+-body { margin: 0; min-width: 320px; background: #f7f9fc; }
++body { margin: 0; min-width: 320px; background: #fcfbf8; }
+ button, input, select { font: inherit; }
+ button { cursor: pointer; }
+ button:disabled { cursor: default; }
+@@ -145,14 +145,23 @@
+ .study-grid.stacked-study { grid-template-columns: minmax(0, 1fr); }
+ .stacked-study .option-rail { position: static; max-height: min(400px, 50dvh); }
+ .question-side { min-width: 0; container: question-panel / inline-size; }
+-.option-bank { padding: 16px 15px 13px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.82); box-shadow: 0 7px 20px rgba(35,62,97,.025); margin-bottom: 15px; }
++.option-bank { padding: 16px 15px 15px; border: 1px solid var(--line); border-radius: 10px; background: rgba(252,251,248,.96); box-shadow: 0 7px 20px rgba(35,62,97,.025); margin-bottom: 15px; }
++.option-bank-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
++.option-bank-heading .section-label { flex: 1 1 auto; margin: 0; }
++.option-view-switch { display: inline-flex; flex: 0 0 auto; padding: 2px; border: 1px solid #dfe5ec; border-radius: 7px; background: #f4f4f0; }
++.option-view-switch button { min-width: 44px; min-height: 30px; padding: 3px 8px; border: 0; border-radius: 5px; color: #5f6874; background: transparent; font-size: 11px; font-weight: 700; transition: color .16s ease, background-color .16s ease, transform .16s ease; }
++.option-view-switch button:hover { color: #0f0f14; background: #e9e9e3; }
++.option-view-switch button:active { transform: scale(.96); }
++.option-view-switch button.active { color: #0f0f14; background: #fcfbf8; box-shadow: 0 1px 3px rgba(15,15,20,.1); }
++.option-view-switch button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+ .option-rail { position: sticky; top: 82px; max-height: calc(100vh - 98px); overflow: auto; scrollbar-gutter: stable; }
+ .option-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+ .option-category-list { display: grid; gap: 15px; }
+ .option-category { display: grid; gap: 9px; }
+ .option-category + .option-category { padding-top: 14px; border-top: 1px solid #e7edf5; }
+-.option-category h3 { margin: 0; color: #3566a8; font-size: 11px; font-weight: 800; letter-spacing: .05em; }
+-.shared-option { display: flex; align-items: flex-start; gap: 8px; min-width: 0; color: #4c5b71; font-size: 13px; line-height: 1.45; }
++.option-category h3 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; color: #3566a8; font-size: 12px; font-weight: 800; letter-spacing: .04em; }
++.option-category h3 em { color: #718096; font-size: 10px; font-style: normal; font-weight: 600; letter-spacing: 0; }
++.shared-option { display: flex; align-items: flex-start; gap: 9px; min-width: 0; color: #344154; font-size: 14px; line-height: 1.6; }
+ .shared-option b { flex: 0 0 auto; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; color: var(--blue); background: var(--blue-soft); font-size: 12px; }
+ .shared-option span { flex: 1; min-width: 0; padding-top: 2px; overflow-wrap: anywhere; text-wrap: balance; }
+ .question-card { border: 1px solid #dfe6ef; border-radius: 10px; background: white; box-shadow: var(--shadow); overflow: hidden; }
+@@ -470,3 +479,22 @@
+ .shared-option span, .stem-copy p { min-width: 0; overflow-wrap: anywhere; }
+ .answer-choices, .answer-choice-category > div { min-width: 0; }
+ .answer-chip { flex-shrink: 0; }
++
++.answer-text-entry { display: inline-flex; align-items: center; gap: 8px; margin: 8px 0 4px 30px; color: #64738b; font-size: 12px; font-weight: 700; }
++.answer-text-entry input, .answer-table-input input { width: 96px; min-height: 38px; padding: 7px 10px; border: 1px solid #cbd7e6; border-radius: 7px; color: #172238; background: #fff; font: inherit; font-size: 14px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
++.answer-text-entry input:focus, .answer-table-input input:focus { border-color: #76a4ec; outline: 3px solid rgba(34,101,214,.12); }
++.answer-text-entry input:disabled, .answer-table-input input:disabled { color: #526176; background: #f5f7fb; }
++.answer-table-input-heading { width: 108px; }
++.answer-table-input { padding: 5px 7px; }
++
++@media (max-width: 720px) {
++  .answer-text-entry { display: flex; margin-left: 0; }
++  .answer-text-entry input { flex: 1; width: auto; min-height: 44px; }
++  .option-bank-heading { align-items: flex-start; }
++  .option-view-switch button { min-width: 52px; min-height: 44px; font-size: 12px; }
++  .shared-option { font-size: 15px; }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
++}
+--- a/index.html
++++ b/index.html
+@@ -3,9 +3,7 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <meta name="theme-color" content="#f7f9fc" />
+-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232466d7'/%3E%3Cpath d='M17 15h24a6 6 0 0 1 6 6v29H23a6 6 0 0 0-6 6V15Z' fill='none' stroke='white' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M17 21v35M25 27h14M25 36h14' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+-    <title>西综题库 · 内科、病理与外科</title>
++    <title>西综清晰题库</title>
+   </head>
+   <body>
+     <div id="root"></div>
+--- /dev/null
++++ b/src/option-display.js
+@@ -0,0 +1,58 @@
++const CATEGORY_ORDER = ['clinical', 'examination', 'diagnosis', 'mechanism', 'treatment', 'other']
++
++export const OPTION_CATEGORY_LABELS = {
++  clinical: '症状／体征',
++  examination: '检查／检验',
++  diagnosis: '诊断／分型',
++  mechanism: '病因／病理',
++  treatment: '治疗／用药',
++  other: '其他选项',
++}
++
++const CATEGORY_PATTERNS = {
++  treatment: /治疗|用药|药物|手术|切除|移植|放疗|化疗|溶栓|抗凝|抗血小板|抗生素|抗菌|吸入型|口服|静注|静脉注射|皮下注射|糖皮质激素|胰岛素|透析|输血|氧疗|吸氧|机械通气|支气管扩张剂|单抗|抑制剂|拮抗剂|激动剂|青霉素|头孢|喹诺酮|大环内酯|四环素|氨基糖苷|利福平|异烟肼|吡嗪酰胺|乙胺丁醇|链霉素|万古霉素|替考拉宁|利奈唑胺|奥司他韦|利巴韦林|阿昔洛韦|华法林|肝素|阿司匹林|氯吡格雷|替格瑞洛|尿激酶|茶碱|洋地黄|地高辛|利尿剂|强心|扩血管|营养支持|康复治疗|对症治疗/i,
++  examination: /检查|检验|培养|涂片|造影|超声|CT|MRI|MRPA|X线|心电图|脑电图|内镜|镜检|活检|穿刺|血气|血清|血浆|血常规|尿常规|粪常规|抗体|抗原|阳性|阴性|浓度|测定|试验|评分|量表|mMRC|FEV|FVC|PaO|PaCO|白细胞|红细胞|血小板|血沉|肌酐|转氨酶|胆红素|血糖|糖化|血脂|CTPA|DSA|HRCT|PAS|PPD|BALF|WBC|Hb|PLT|嗜酸性粒细胞|嗜酸性|嗜碱性|淋巴细胞|中性粒|粒细胞|血细胞|尿蛋白|蛋白尿|血尿|血氧|氧分压|二氧化碳分压|影像|磨玻璃|实变|充盈缺损|轨道征|地图样|铺路石样/i,
++  clinical: /症状|体征|发热|咳嗽|咳痰|咯血|胸痛|胸闷|呼吸困难|气短|喘息|哮鸣音|杂音|啰音|水肿|腹水|肝大|脾大|颈静脉|压痛|疼痛|腹痛|腹泻|恶心|呕吐|呕血|便血|黄疸|贫血|出血|瘀斑|皮疹|结节性红斑|溃疡|意识|昏迷|休克|抽搐|瘫痪|无力|麻木|心悸|晕厥|发绀|杵状指|叩诊|触诊|听诊|搏动|脉率|心率|血压|呼吸音|体温|体重|消瘦|盗汗|低热|高热|寒战|脓痰|铁锈色痰|吞咽困难|声音嘶哑|乳腺发育|高血钙|低血钠|三凹征|奇脉|沉默肺|坐位|端坐呼吸|喘气|乏力|疲劳|食欲|失眠|头痛|头晕/i,
++  diagnosis: /诊断|分型|分期|分级|危险分层|低危|中危|高危|轻型|重型|代偿期|失代偿期|急性期|慢性期|早期|晚期|缓解期|急性加重|A组|B组|E组|哮喘史|高风险|低风险|症状少|症状多|[ⅠⅡⅢⅣⅤ]级|I{1,3}级|IV级/i,
++  mechanism: /病因|发病机制|机制|导致|引起|所致|相关|遗传|自身免疫|感染|炎症|免疫|抵抗力|杆菌|病毒|细菌|真菌|支原体|衣原体|寄生虫|肉芽肿|纤维化|增生|萎缩|坏死|变性|栓塞|梗阻|狭窄|关闭不全|反流|功能障碍|缺乏|抵抗|突变|基因|气流受限|通气障碍|换气障碍|分流|阻塞|压迫|转移/i,
++}
++
++const TREATMENT_ACRONYM = /(?<![A-Za-z])(?:SABA|LABA|LAMA|SAMA|ICS|rt-PA|t-PA|ACEI|ARB|ARNI|NSAIDs?)(?![A-Za-z])/i
++
++export function inferOptionCategory(option) {
++  const label = String(option?.label || '')
++  if (!label) return 'other'
++  for (const category of ['treatment', 'examination', 'clinical', 'diagnosis', 'mechanism']) {
++    if (CATEGORY_PATTERNS[category].test(label) || (category === 'treatment' && TREATMENT_ACRONYM.test(label))) return category
++  }
++  return 'other'
++}
++
++function existingSections(group) {
++  if (group.optionBankSections?.length) {
++    return group.optionBankSections.map((section) => ({
++      title: section.title,
++      options: section.keys.map((key) => group.options.find((option) => option.key === key)).filter(Boolean),
++    })).filter((section) => section.options.length)
++  }
++  const categories = [...new Set(group.options.map((option) => option.category).filter(Boolean))]
++  return categories.map((category) => ({
++    title: category,
++    options: group.options.filter((option) => option.category === category),
++  }))
++}
++
++export function getOptionSections(group, displayMode = 'grouped') {
++  if (displayMode === 'original') return []
++  const curated = existingSections(group)
++  if (curated.length) return curated
++
++  const buckets = new Map(CATEGORY_ORDER.map((category) => [category, []]))
++  for (const option of group.options) buckets.get(inferOptionCategory(option)).push(option)
++  const meaningfulCategories = CATEGORY_ORDER.filter((category) => category !== 'other' && buckets.get(category).length)
++  if (meaningfulCategories.length < 2) return []
++
++  return CATEGORY_ORDER
++    .filter((category) => buckets.get(category).length)
++    .map((category) => ({ title: OPTION_CATEGORY_LABELS[category], options: buckets.get(category) }))
++}

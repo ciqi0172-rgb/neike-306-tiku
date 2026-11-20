@@ -5,7 +5,7 @@
     "sourcePages": 2,
     "lectureCount": 0,
     "groupCount": 2,
-    "stemCount": 16,
+    "stemCount": 21,
     "siteIntegrated": true,
     "auditState": "首段按原资料顺序整理；疑似OCR/原文不完整项单独登记",
     "sourceOrder": "生物化学·一、循环大串讲（资料第1—2页）",
@@ -189,6 +189,46 @@
           "answerRaw": "H",
           "answerMode": "单选",
           "knowledgeId": "bio-cycle-gamma-glutamyl"
+        },
+        {
+          "number": 11,
+          "text": "资料指出该循环中发生两次脱羧反应，指的是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-tca-decarboxylation"
+        },
+        {
+          "number": 12,
+          "text": "资料指出，双胍类降糖药抑制后可能引起乳酸酸中毒；涉及的循环是：",
+          "answer": [
+            "C"
+          ],
+          "answerRaw": "C",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-biguanide"
+        },
+        {
+          "number": 13,
+          "text": "肝功能严重损伤或鸟氨酸氨基甲酰转移酶（OCT）遗传缺陷，可导致该循环障碍并出现高血氨症：",
+          "answer": [
+            "F"
+          ],
+          "answerRaw": "F",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-hyperammonemia"
+        },
+        {
+          "number": 14,
+          "text": "资料还将亚精胺、精胺（多胺）及真核mRNA 5′端帽子的合成与该循环联系起来：",
+          "answer": [
+            "G"
+          ],
+          "answerRaw": "G",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-sam-products"
         }
       ],
       "reviewState": "已按原资料核对；语义不明确内容未出题",
@@ -300,6 +340,16 @@
           "answerRaw": "D",
           "answerMode": "单选",
           "knowledgeId": "bio-cycle-gprotein-cholera"
+        },
+        {
+          "number": 7,
+          "text": "少部分胆素原经肠道重吸收进入肝脏，其中大部分再排入肠道，小部分进入尿液并接触空气后形成尿胆素；涉及：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-urobilinogen-urine"
         }
       ],
       "reviewState": "已按原资料核对；OCR残留已排除",
@@ -339,7 +389,7 @@
     {
       "sourcePage": 1,
       "item": "乳酸循环功能、双胍类抑制与乳酸酸中毒",
-      "status": "循环功能已出题；双胍类关联已在原文缺口/后续机制复核中登记",
+      "status": "循环功能与双胍类抑制后乳酸酸中毒均已出题",
       "groupIds": [
         "foundation-bio-cycles-g01"
       ]
@@ -347,7 +397,7 @@
     {
       "sourcePage": 1,
       "item": "嘌呤核苷酸循环、丙氨酸-葡萄糖循环、鸟氨酸循环",
-      "status": "功能归属已出题；OCT缺陷与高血氨机制待后续专题复核",
+      "status": "循环功能及鸟氨酸循环障碍与高血氨联系已出题",
       "groupIds": [
         "foundation-bio-cycles-g01"
       ]
@@ -355,7 +405,7 @@
     {
       "sourcePage": 1,
       "item": "SAM循环产物、γ-谷氨酰基循环功能",
-      "status": "核心功能已出题；SAM其他产物在后续代谢专题复核",
+      "status": "活性甲基与SAM相关产物均已出题",
       "groupIds": [
         "foundation-bio-cycles-g01"
       ]
@@ -363,7 +413,7 @@
     {
       "sourcePage": 2,
       "item": "胆汁酸肠肝循环、胆素原肠肝循环、核糖体循环、G蛋白循环、Q循环",
-      "status": "已出题",
+      "status": "五类循环均已出题；胆素原经尿液排出及形成尿胆素的路径已补题",
       "groupIds": [
         "foundation-bio-cycles-g02"
       ]

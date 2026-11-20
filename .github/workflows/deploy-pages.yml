@@ -1,5 +1,6 @@
 name: Deploy original green 306 mind-map question bank with 真题目录层级
 # Trigger a fresh Pages deployment of the verified mindmap-question-bank source.
+# Keep course links compact and unobtrusive in the published question view.
 
 on:
   push:

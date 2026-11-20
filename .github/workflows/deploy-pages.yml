@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy restored green mind-map question bank
 
 on:
   push:
@@ -22,27 +22,20 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out deployment repository
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+      - name: Check out original green question bank
+        uses: actions/checkout@v4
         with:
-          version: 11.9.0
+          repository: ciqi0172-rgb/neike-306-tiku-web
+          ref: main
+          path: green-source
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.13.0
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build static site
-        env:
-          BASE_PATH: /neike-306-tiku/
-        run: pnpm run build:pages
+      - name: Prepare static site
+        run: |
+          mkdir -p dist-pages
+          cp green-source/index.html dist-pages/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -873,6 +873,32 @@ function render(){
   bindEvents();
 }
 
+function sourceSubjectFor(g){
+  var t=(g.topic||'')+' '+(g.lecture||'')+' '+(g.title||'');
+  if(/生理|微循环|心脏神经|下丘脑|输卵管|排卵|月经/.test(t)) return '生理';
+  if(/生化|酶活性|RNA|剪接|mRNA|转录后/.test(t)) return '生化';
+  if(/外科|利多卡因|破伤风|局麻|麻醉/.test(t)) return '外科';
+  if(/内科|昏迷|溃疡性结肠炎|肝硬化|痛风|肺栓塞|肺血栓/.test(t)) return '内科';
+  return '';
+}
+function sourceLessonFor(g){
+  var wantSub=sourceSubjectFor(g), want=(g.lecture||'').replace(/[：:，、与及]/g,' ');
+  var words=want.split(/\\s+/).filter(function(x){return x.length>=2;});
+  var best=null, bestScore=0;
+  GROUPS.forEach(function(c){
+    if(c.id===g.id || /^x2024-/.test(c.id) || c.subject==='真题') return;
+    var text=(c.topic||'')+' '+(c.lecture||'')+' '+(c.title||'');
+    var score=0;
+    if(want && c.lecture===g.lecture) score+=100;
+    if(want && (c.lecture||'').indexOf(want)>=0) score+=70;
+    if(want && want.indexOf(c.lecture||'')>=0 && (c.lecture||'').length>=2) score+=45;
+    words.forEach(function(w){ if(text.indexOf(w)>=0) score+=12; });
+    if(wantSub && (c.subject||'').indexOf(wantSub)>=0) score+=20;
+    if(wantSub && (c.topic||'').indexOf(wantSub)>=0) score+=5;
+    if(score>bestScore){best=c;bestScore=score;}
+  });
+  return bestScore>=20 ? best : null;
+}
 function renderCard(g){
   var sub = isSubmitted(g);
   var h = '<div class="card">';
@@ -923,6 +949,8 @@ function renderCard(g){
       if(s.mnemonic) h += '<div class="mnemonic"><b>💡 口诀</b>'+esc(s.mnemonic)+'</div>';
       h += '</div>';
     }
+    var source = sourceLessonFor(g);
+    h += '<div class="source-lesson-link" style="margin:8px 0 2px;font-size:13px;color:#557565;">↳ <button type="button" data-act="sourceLesson" data-source-id="'+esc(source?source.id:'')+'" data-source-subject="'+esc(sourceSubjectFor(g))+'" data-source-query="'+esc(g.lecture||g.title)+'" style="color:#1c7a49;text-decoration:underline;text-underline-offset:3px;font-weight:600;">回到原题库对应课程：'+esc(source?(source.lecture||source.title):g.lecture||g.title)+'</button></div>';
     h += '</div>';
   });
   h += '</div>';
@@ -994,6 +1022,21 @@ function onAction(e){
       refreshList(); break;
     case 'lecture':
       state.topic = el.dataset.t; state.lecture = el.dataset.v; state.favOnly=false; state.index=0; state.activeStem=0; autoCloseDrawer(); refreshList(); break;
+    case 'sourceLesson':
+      var sourceId=el.dataset.sourceId, target=null;
+      if(sourceId){ target=GROUPS.find(function(x){return x.id===sourceId;}); }
+      if(target){
+        state.subject=target.subject; save('mm-subject',state.subject);
+        state.topic=target.topic||''; state.lecture=target.lecture||'';
+        state.search=''; state.type='全部'; state.favOnly=false; state.index=0; state.activeStem=0;
+      } else {
+        var fallbackSub=el.dataset.sourceSubject||'';
+        if(fallbackSub && SUBJECTS.indexOf(fallbackSub)>=0) state.subject=fallbackSub;
+        state.topic=''; state.lecture=''; state.search=el.dataset.sourceQuery||'';
+        state.type='全部'; state.favOnly=false; state.index=0; state.activeStem=0;
+        save('mm-subject',state.subject);
+      }
+      autoCloseDrawer(); refreshList(); window.scrollTo({top:0}); break;
     case 'favOnly': state.favOnly = !state.favOnly; state.index=0; state.activeStem=0; autoCloseDrawer(); refreshList(); break;
     case 'toggleSidebar': case 'closeSidebar': state.sidebarCollapsed = true; render(); break;
     case 'clearSearch': state.search=''; state.index=0; refreshList(); break;

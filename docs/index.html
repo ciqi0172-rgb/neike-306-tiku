@@ -950,7 +950,7 @@ function renderCard(g){
       h += '</div>';
     }
     var source = sourceLessonFor(g);
-    h += '<div class="source-lesson-link" style="margin:8px 0 2px;font-size:13px;color:#557565;">↳ <button type="button" data-act="sourceLesson" data-source-id="'+esc(source?source.id:'')+'" data-source-subject="'+esc(sourceSubjectFor(g))+'" data-source-query="'+esc(g.lecture||g.title)+'" style="color:#1c7a49;text-decoration:underline;text-underline-offset:3px;font-weight:600;">回到原题库对应课程：'+esc(source?(source.lecture||source.title):g.lecture||g.title)+'</button></div>';
+    h += '<div class="source-lesson-link" style="margin:3px 0 0;font-size:10px;line-height:1.2;color:#9aa89f;opacity:.65;">↳ <button type="button" data-act="sourceLesson" data-source-id="'+esc(source?source.id:'')+'" data-source-subject="'+esc(sourceSubjectFor(g))+'" data-source-query="'+esc(g.lecture||g.title)+'" title="回到原题库对应课程" style="padding:0;border:0;background:transparent;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;font-weight:400;cursor:pointer;">原课程</button></div>';
     h += '</div>';
   });
   h += '</div>';

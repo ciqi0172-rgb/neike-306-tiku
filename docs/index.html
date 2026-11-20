@@ -164,6 +164,9 @@ input,select{font-family:inherit;font-size:inherit;color:inherit}
   .chip{min-width:44px;min-height:44px;justify-content:center}
   .subject-switch button,.primary-btn,.ghost-btn,.topic-link,.fav-link{min-height:44px}
 }
+
+.exam2024-note{margin:12px 22px 0;padding:10px 14px;border:1px solid #cfe5d6;border-radius:12px;background:#f1f8f3;color:#315b43;font-size:13px;line-height:1.65}
+@media(max-width:720px){.exam2024-note{margin:10px 12px 0;padding:10px 12px}}
 </style>
 </head>
 <body>
@@ -813,6 +816,7 @@ function render(){
   h += '<label class="filter-box">'+iconSvg('sliders',15)+'<select id="typeFilter" aria-label="题型筛选">'+
        ['全部','单选','多选'].map(function(t){ return '<option'+(state.type===t?' selected':'')+'>'+t+'</option>'; }).join('')+'</select>'+iconSvg('chevron',13)+'</label>';
   h += '</div></header>';
+  if(state.subject === '2024真题') h += '<div class="exam2024-note">本专项只从原题库提取与真题考点相关的题目，保留原题干、选项和答案。每题前标注对应的2024年真题题号；没有找到对应现有题目的真题号，不会另行编题。</div>';
 
   // 工作区
   h += '<div class="workspace'+(state.sidebarCollapsed?' sidebar-collapsed':' drawer-open')+'">';
@@ -1060,6 +1064,34 @@ function ensureSidebarEntry(){
     sw.parentNode.insertBefore(b, sw);
   }
 }
+
+/* ===== 2024 真题考点专项：仅复用现有题库题目，不改动原始题库数据 ===== */
+var EXAM2024_PICK = {"b012-g04":{"7":[5]},"b015-g01":{"1":[6]},"b015-g03":{"0":[6],"1":[6],"2":[6]},"b033-g05":{"0":[9],"1":[9]},"base-sl-g18":{"3":[9],"4":[9],"5":[9],"6":[9],"7":[9]},"b042-g12":{"2":[11]},"b047-g01":{"0":[13],"1":[13]},"b050-g01":{"0":[16],"1":[16]},"b050-g03":{"2":[16],"3":[16],"4":[16]},"base-sh-g23":{"0":[20],"5":[20]},"base-sh-g06":{"1":[22],"3":[123],"5":[22]},"base-sh-g08":{"0":[22],"1":[22],"2":[123]},"b094s01-g02":{"0":[23],"1":[23]},"b103-g04":{"0":[27],"1":[27],"2":[27]},"b070-g05":{"0":[30],"1":[30],"2":[30]},"b060s05-g01":{"0":[37]},"b060s05-g08":{"0":[37]},"b079s04-g05":{"0":[50],"2":[50],"5":[50],"9":[50]},"kb-xiaohua-g10":{"0":[50],"1":[50]},"b060s00-g01":{"0":[52],"1":[52],"2":[52]},"b060s01-g03":{"0":[52],"1":[52],"2":[52]},"b060s01-g06":{"0":[52],"1":[52],"2":[52]},"b090s00-g02":{"4":[56]},"b092s01-g05":{"1":[58],"2":[58],"3":[58]},"kb-wkzonglun-g24":{"0":[59],"2":[59],"3":[59],"4":[59]},"b091s22-g06":{"7":[66]},"b091s22-g07":{"7":[66]},"b091s33-g01":{"0":[67]},"b091s33-g05":{"0":[67],"1":[67]},"kb-wkguke-g19":{"0":[67],"1":[67],"2":[67]},"b076s05-g02":{"0":[73],"1":[73]},"b076s05-g03":{"0":[73],"1":[73],"2":[73]},"kb-xiaohua-g04":{"8":[80],"9":[80],"10":[80],"11":[80],"15":[80]},"b081-g01":{"0":[80],"1":[80],"2":[80]},"b084s02-g09":{"0":[82,83],"1":[82,83]},"b060s03-g05":{"0":[82,83],"1":[82,83]},"b091s12-g01":{"1":[97],"2":[97],"3":[97],"4":[97]},"b091s12-g02":{"2":[97]},"b091s12-g03":{"0":[97]},"b076s05-g12":{"0":[129],"1":[129],"2":[129],"4":[129]},"b076s05-g07":{"0":[129],"1":[129]},"kb-zhongdu-g01":{"1":[138]},"b079s03-g03":{"2":[138],"3":[138]},"b098-g15":{"0":[143]},"b098-g14":{"0":[144],"1":[144]},"b101-g04":{"0":[144],"1":[144],"2":[144]},"base-sh-g20":{"2":[144],"3":[144],"6":[144]},"b095-g04":{"0":[147],"1":[147]},"b097-g17":{"0":[148],"1":[148]},"b060s02-g17":{"0":[148],"1":[148],"2":[148]},"b064-g01":{"0":[151]},"b064-g02":{"0":[151],"1":[151],"2":[151],"5":[151],"6":[151]},"b078s07-g03":{"0":[155],"1":[155],"2":[155],"3":[155]},"b082-g06":{"3":[156],"4":[156],"5":[156]},"kb-xiaohua-g20":{"4":[156],"5":[156],"6":[156],"7":[156]},"b085-g03":{"0":[158]},"b085-g02":{"0":[158]},"b091s05-g18":{"0":[161],"1":[161]},"b081-g25":{"0":[161],"1":[161],"2":[161],"3":[161],"4":[161],"5":[161],"6":[161]},"b091s08-g01":{"0":[161],"1":[161],"2":[161],"3":[161]},"b072-g10":{"4":[161]},"b091s11-g04":{"1":[161]},"b091s32-g02":{"1":[164]},"b091s32-g03":{"1":[164]},"kb-wkguke-g17":{"4":[164]},"b091s20-g09":{"0":[165]},"b065-g20":{"2":[165]}};
+if (SUBJECTS.indexOf('2024真题') < 0) SUBJECTS.push('2024真题');
+bySubject['2024真题'] = [];
+GROUPS.forEach(function(g){
+  var pick = EXAM2024_PICK[g.id];
+  if (!pick) return;
+  var selectedStems = [];
+  Object.keys(pick).sort(function(a,b){ return Number(a)-Number(b); }).forEach(function(k){
+    var sourceStem = g.stems[Number(k)];
+    if (!sourceStem) return;
+    var refs = pick[k];
+    var stemCopy = {};
+    Object.keys(sourceStem).forEach(function(key){ stemCopy[key] = sourceStem[key]; });
+    stemCopy.text = '【对应2024年真题第' + refs.join('、') + '题】 ' + sourceStem.text;
+    selectedStems.push(stemCopy);
+  });
+  if (!selectedStems.length) return;
+  var groupCopy = {};
+  Object.keys(g).forEach(function(key){ groupCopy[key] = g[key]; });
+  groupCopy.id = 'exam2024-' + g.id;
+  groupCopy.title = '2024真题考点｜' + g.title;
+  groupCopy.stems = selectedStems;
+  bySubject['2024真题'].push(groupCopy);
+});
+/* ===== 2024 真题考点专项结束 ===== */
+
 var _render = render;
 render = function(){ _render(); ensureSidebarEntry(); };
 

@@ -169,7 +169,7 @@ const CONTENT_LOADERS = {
     }), updatedEvidence)
   },
   biochemistry: async () => {
-    const [biochemistryContent, biochemistryLecture2Content, biochemistryLecture3Content, biochemistryLecture4Content, biochemistryLecture5Content, biochemistryLecture6Content, biochemistryLecture7Content, biochemistryLecture8Content, biochemistryLecture9Content, biochemistryLecture10Content, biochemistryLecture11Content, biochemistryLecture12Content, biochemistryLecture13Content, biochemistryLecture14Content, biochemistryLecture15Content, biochemistryLecture16Content, biochemistryLecture17Content, biochemistryLecture18Content, biochemistryLecture19Content, biochemistryLecture20Content, biochemistryTeacherContent, biochemistryExamContent, reviewedEvidence] = await Promise.all([
+    const [biochemistryContent, biochemistryLecture2Content, biochemistryLecture3Content, biochemistryLecture4Content, biochemistryLecture5Content, biochemistryLecture6Content, biochemistryLecture7Content, biochemistryLecture8Content, biochemistryLecture9Content, biochemistryLecture10Content, biochemistryLecture11Content, biochemistryLecture12Content, biochemistryLecture13Content, biochemistryLecture14Content, biochemistryLecture15Content, biochemistryLecture16Content, biochemistryLecture17Content, biochemistryLecture18Content, biochemistryLecture19Content, biochemistryLecture20Content, biochemistryTeacherContent, biochemistryExamContent, reviewedEvidence, foundationCyclesContent] = await Promise.all([
       loadJson(() => import('./data/biochemistry-data.json')),
       loadJson(() => import('./data/biochemistry-lecture2-data.json')),
       loadJson(() => import('./data/biochemistry-lecture3-data.json')),
@@ -193,6 +193,7 @@ const CONTENT_LOADERS = {
       loadJson(() => import('./data/biochemistry-teacher-supplement.json')),
       loadJson(() => import('./data/biochemistry-stage-exam-data.json')),
       loadJson(() => import('./data/biochemistry-reviewed-lecture-evidence.json')),
+      loadJson(() => import('./data/biochemistry-foundation-cycles-data.json')),
     ])
     const allContents = [biochemistryContent, biochemistryLecture2Content, biochemistryLecture3Content, biochemistryLecture4Content, biochemistryLecture5Content, biochemistryLecture6Content, biochemistryLecture7Content, biochemistryLecture8Content, biochemistryLecture9Content, biochemistryLecture10Content, biochemistryLecture11Content, biochemistryLecture12Content, biochemistryLecture13Content, biochemistryLecture14Content, biochemistryLecture15Content, biochemistryLecture16Content, biochemistryLecture17Content, biochemistryLecture18Content, biochemistryLecture19Content, biochemistryLecture20Content]
     const groups = allContents.flatMap((content) => content.groups).map((group) => ({
@@ -205,13 +206,13 @@ const CONTENT_LOADERS = {
         ...biochemistryContent.meta,
         title: '生物化学题库',
         lectureCount: 20,
-        groupCount: groups.length,
-        stemCount: groups.reduce((sum, group) => sum + group.stems.length, 0),
+        groupCount: groups.length + foundationCyclesContent.groups.length,
+        stemCount: [...groups, ...foundationCyclesContent.groups].reduce((sum, group) => sum + group.stems.length, 0),
         answerNote: `已收录第01～20讲题组、分章课后巩固及阶段考试；${biochemistryExamContent.meta.answerNote}`,
       },
-      topics: ['糖代谢', '生物氧化', '脂代谢', '氨基酸与蛋白质', '核苷酸代谢', '胆色素代谢与生物转化', '酶', '维生素', '小基因', '核酸'],
-      groups,
-      pages: allContents.flatMap((content) => content.pages),
+      topics: ['糖代谢', '生物氧化', '脂代谢', '氨基酸与蛋白质', '核苷酸代谢', '胆色素代谢与生物转化', '酶', '维生素', '小基因', '核酸', '代谢联系与循环'],
+      groups: [...groups, ...foundationCyclesContent.groups],
+      pages: [...allContents.flatMap((content) => content.pages), ...foundationCyclesContent.pages],
       lectures: allContents.flatMap((content) => content.lectures),
     }, {
       groups: [...biochemistryTeacherContent.groups, ...biochemistryExamContent.groups],
@@ -296,6 +297,7 @@ const BIOCHEMISTRY_DIRECTORY = {
     '呼吸链组成与 P/O 比值',
     '氧化磷酸化调节与抑制',
   ],
+  '代谢联系与循环': ['代谢联系与循环'],
 }
 
 const MED_LECTURE_TOPIC_RANGES = {

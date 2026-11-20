@@ -883,7 +883,7 @@ function sourceSubjectFor(g){
 }
 function sourceLessonFor(g){
   var wantSub=sourceSubjectFor(g), want=(g.lecture||'').replace(/[：:，、与及]/g,' ');
-  var words=want.split(/\\s+/).filter(function(x){return x.length>=2;});
+  var words=want.split(/\s+/).filter(function(x){return x.length>=2;});
   var best=null, bestScore=0;
   GROUPS.forEach(function(c){
     if(c.id===g.id || /^x2024-/.test(c.id) || c.subject==='真题') return;

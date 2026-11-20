@@ -37,8 +37,9 @@ jobs:
         run: |
           test -f site-source/docs/index.html
           grep -q '306 思维导图题库' site-source/docs/index.html
-          grep -q '缺铁贫铁代谢与确诊指标' site-source/docs/index.html
-          echo "Verified green 306 question bank source."
+          grep -q 'window.BANK = JSON.parse(LZString.decompressFromBase64' site-source/docs/index.html
+          test "$(wc -c < site-source/docs/index.html)" -gt 400000
+          echo "Verified green 306 question bank source and embedded question bank."
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

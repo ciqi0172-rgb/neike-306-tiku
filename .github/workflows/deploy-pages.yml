@@ -1,4 +1,4 @@
-name: Deploy original green 306 mind-map question bank with 2024 exam mode
+name: Deploy original green 306 mind-map question bank with 2024 exam mode persistence
 
 on:
   push:

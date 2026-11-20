@@ -816,7 +816,7 @@ function render(){
   h += '<label class="filter-box">'+iconSvg('sliders',15)+'<select id="typeFilter" aria-label="题型筛选">'+
        ['全部','单选','多选'].map(function(t){ return '<option'+(state.type===t?' selected':'')+'>'+t+'</option>'; }).join('')+'</select>'+iconSvg('chevron',13)+'</label>';
   h += '</div></header>';
-  if(state.subject === '2024真题') h += '<div class="exam2024-note">本专项只从原题库提取与真题考点相关的题目，保留原题干、选项和答案。每题前标注对应的2024年真题题号；没有找到对应现有题目的真题号，不会另行编题。</div>';
+  if(state.subject === '真题') h += '<div class="exam2024-note">2024年真题考点回练：以下均为原题库已有题目，题目前标注对应的真题年份、题型和题号；未找到对应现有题目的题号不会另行编题。</div>';
 
   // 工作区
   h += '<div class="workspace'+(state.sidebarCollapsed?' sidebar-collapsed':' drawer-open')+'">';
@@ -1079,7 +1079,7 @@ GROUPS.forEach(function(g){
     var refs = pick[k];
     var stemCopy = {};
     Object.keys(sourceStem).forEach(function(key){ stemCopy[key] = sourceStem[key]; });
-    stemCopy.text = '【对应2024年真题第' + refs.join('、') + '题】 ' + sourceStem.text;
+    stemCopy.text = '【2024' + (sourceStem.answerMode === '多选' ? '多选' : '单选') + '·' + refs.join('、') + '】 ' + sourceStem.text;
     selectedStems.push(stemCopy);
   });
   if (!selectedStems.length) return;
@@ -1089,7 +1089,7 @@ GROUPS.forEach(function(g){
   groupCopy.subject = '真题';
   groupCopy.topic = '2024年真题';
   groupCopy.lecture = [g.topic, g.lecture].filter(Boolean).join(' / ');
-  groupCopy.title = '2024年真题｜' + g.title;
+  groupCopy.title = g.title;
   groupCopy.stems = selectedStems;
   bySubject['真题'].push(groupCopy);
 });

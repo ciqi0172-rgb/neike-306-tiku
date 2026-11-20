@@ -1,0 +1,520 @@
+{
+  "meta": {
+    "title": "基础学科知识点库·生物化学循环大串讲",
+    "sourceLabel": "用户提供的《【狂背】基础学科》HTML资料",
+    "sourcePages": 2,
+    "lectureCount": 0,
+    "groupCount": 5,
+    "stemCount": 20,
+    "siteIntegrated": true,
+    "auditState": "首段按原资料顺序整理；疑似OCR/原文不完整项单独登记",
+    "sourceOrder": "生物化学·一、循环大串讲（资料第1—2页）",
+    "unresolved": [
+      "三羧酸循环写有“3个关键酶”，但本段未列具体名称，暂不补题。",
+      "“2次脱羧：C来源于草酰乙酸”语义不明确，暂不据此设题。",
+      "胆素原段落出现“uusx”等疑似OCR残留，不作为知识内容。"
+    ]
+  },
+  "topics": [
+    "代谢联系与循环"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "image": "",
+      "topic": "代谢联系与循环",
+      "searchText": "三羧酸循环 柠檬酸-丙酮酸循环 乳酸循环 嘌呤核苷酸循环 丙氨酸-葡萄糖循环 鸟氨酸循环 SAM循环 γ-谷氨酰基循环"
+    },
+    {
+      "page": 2,
+      "image": "",
+      "topic": "代谢联系与循环",
+      "searchText": "胆汁酸肠肝循环 胆素原肠肝循环 核糖体循环 G蛋白循环 Q循环"
+    }
+  ],
+  "groups": [
+    {
+      "id": "foundation-bio-cycles-g01",
+      "page": 1,
+      "title": "三羧酸循环：定位与反应特征",
+      "kind": "B",
+      "kindLabel": "B型题",
+      "topic": "代谢联系与循环",
+      "sourceText": "资料第1页·三羧酸循环",
+      "sourcePage": 1,
+      "sourceOrder": 1,
+      "knowledgeIds": [
+        "bio-cycle-tca-location",
+        "bio-cycle-tca-hub",
+        "bio-cycle-tca-substrate-level",
+        "bio-cycle-tca-dehydrogenase"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "label": "三羧酸循环"
+        },
+        {
+          "key": "B",
+          "label": "柠檬酸-丙酮酸循环"
+        },
+        {
+          "key": "C",
+          "label": "乳酸循环（Cori循环）"
+        },
+        {
+          "key": "D",
+          "label": "鸟氨酸循环"
+        },
+        {
+          "key": "E",
+          "label": "嘌呤核苷酸循环"
+        }
+      ],
+      "stems": [
+        {
+          "number": 1,
+          "text": "属于线粒体内进行的循环，并被资料概括为三大营养物质最终代谢去路、联系枢纽的是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-tca-location"
+        },
+        {
+          "number": 2,
+          "text": "发生琥珀酰CoA与琥珀酸相互转化，并产生GTP/ATP的底物水平磷酸化反应属于：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-tca-substrate-level"
+        },
+        {
+          "number": 3,
+          "text": "资料指出琥珀酸脱氢酶可被丙二酸竞争性抑制，该酶参与的循环是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-tca-dehydrogenase"
+        },
+        {
+          "number": 4,
+          "text": "在本段资料中，被列出有两次脱羧反应的循环是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-tca-decarboxylation"
+        }
+      ],
+      "reviewState": "已按原资料核对；语义不明确内容未出题",
+      "reviewIssues": [
+        "“3个关键酶”未给出具体名称；“C来源于草酰乙酸”表述不清，暂不考。"
+      ],
+      "reviewNotes": [
+        "只考资料明确写出的定位、枢纽作用、底物水平磷酸化及丙二酸竞争性抑制。"
+      ]
+    },
+    {
+      "id": "foundation-bio-cycles-g02",
+      "page": 1,
+      "title": "柠檬酸-丙酮酸循环与乳酸循环",
+      "kind": "B",
+      "kindLabel": "B型题",
+      "topic": "代谢联系与循环",
+      "sourceText": "资料第1页·柠檬酸-丙酮酸循环、乳酸循环",
+      "sourcePage": 1,
+      "sourceOrder": 2,
+      "knowledgeIds": [
+        "bio-cycle-citrate-pyruvate",
+        "bio-cycle-cori",
+        "bio-cycle-biguanide"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "label": "柠檬酸-丙酮酸循环"
+        },
+        {
+          "key": "B",
+          "label": "乳酸循环（Cori循环）"
+        },
+        {
+          "key": "C",
+          "label": "丙氨酸-葡萄糖循环"
+        },
+        {
+          "key": "D",
+          "label": "γ-谷氨酰基循环"
+        }
+      ],
+      "stems": [
+        {
+          "number": 1,
+          "text": "将乙酰CoA从线粒体带到胞浆，用于脂肪酸、胆固醇等合成，并可产生少量NADPH的是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-citrate-pyruvate"
+        },
+        {
+          "number": 2,
+          "text": "有助于避免乳酸堆积、酸中毒及能源物质损失的是：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-cori"
+        },
+        {
+          "number": 3,
+          "text": "资料指出双胍类降糖药抑制后可导致乳酸酸中毒的循环是：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-biguanide"
+        }
+      ],
+      "reviewState": "已按原资料核对",
+      "reviewIssues": [],
+      "reviewNotes": [
+        "运输方向、合成用途及少量NADPH分别覆盖；乳酸循环与双胍类联系分开设问。"
+      ]
+    },
+    {
+      "id": "foundation-bio-cycles-g03",
+      "page": 1,
+      "title": "氮转运与氨处理相关循环",
+      "kind": "B",
+      "kindLabel": "B型题",
+      "topic": "代谢联系与循环",
+      "sourceText": "资料第1页·嘌呤核苷酸循环、丙氨酸-葡萄糖循环、鸟氨酸循环",
+      "sourcePage": 1,
+      "sourceOrder": 3,
+      "knowledgeIds": [
+        "bio-cycle-purine-nucleotide",
+        "bio-cycle-alanine-glucose",
+        "bio-cycle-ornithine",
+        "bio-cycle-hyperammonemia"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "label": "嘌呤核苷酸循环"
+        },
+        {
+          "key": "B",
+          "label": "丙氨酸-葡萄糖循环"
+        },
+        {
+          "key": "C",
+          "label": "鸟氨酸循环"
+        },
+        {
+          "key": "D",
+          "label": "S-腺苷甲硫氨酸（SAM）循环"
+        },
+        {
+          "key": "E",
+          "label": "γ-谷氨酰基循环"
+        }
+      ],
+      "stems": [
+        {
+          "number": 1,
+          "text": "资料将其与肌肉中的氨基酸脱氨基联系起来的是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-purine-nucleotide"
+        },
+        {
+          "number": 2,
+          "text": "将肌肉产生的含氮物质以丙氨酸形式运至肝脏的循环是：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-alanine-glucose"
+        },
+        {
+          "number": 3,
+          "text": "将NH₃转变为尿素、涉及肝线粒体和胞浆的循环是：",
+          "answer": [
+            "C"
+          ],
+          "answerRaw": "C",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-ornithine"
+        },
+        {
+          "number": 4,
+          "text": "肝功能严重损伤或鸟氨酸氨基甲酰转移酶（OCT）遗传缺陷，可导致哪一循环障碍并出现高血氨症？",
+          "answer": [
+            "C"
+          ],
+          "answerRaw": "C",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-hyperammonemia"
+        }
+      ],
+      "reviewState": "已按原资料核对",
+      "reviewIssues": [],
+      "reviewNotes": [
+        "按原文保留丙氨酸-葡萄糖循环把肌肉NH₃运至肝的描述，不扩展反应细节。"
+      ]
+    },
+    {
+      "id": "foundation-bio-cycles-g04",
+      "page": 1,
+      "title": "SAM循环与γ-谷氨酰基循环",
+      "kind": "B",
+      "kindLabel": "B型题",
+      "topic": "代谢联系与循环",
+      "sourceText": "资料第1页·SAM循环、γ-谷氨酰基循环",
+      "sourcePage": 1,
+      "sourceOrder": 4,
+      "knowledgeIds": [
+        "bio-cycle-sam-methyl",
+        "bio-cycle-sam-products",
+        "bio-cycle-gamma-glutamyl"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "label": "S-腺苷甲硫氨酸（SAM）循环"
+        },
+        {
+          "key": "B",
+          "label": "γ-谷氨酰基循环"
+        },
+        {
+          "key": "C",
+          "label": "鸟氨酸循环"
+        },
+        {
+          "key": "D",
+          "label": "嘌呤核苷酸循环"
+        }
+      ],
+      "stems": [
+        {
+          "number": 1,
+          "text": "为多种合成反应提供活性甲基，并参与合成肉碱、肾上腺素、肌酸和胆碱的是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-sam-methyl"
+        },
+        {
+          "number": 2,
+          "text": "资料列出的相关产物还包括亚精胺、精胺及真核mRNA 5′端帽子；该循环是：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-sam-products"
+        },
+        {
+          "number": 3,
+          "text": "资料指出有谷胱甘肽（GSH）参与、协助氨基酸吸收的是：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-gamma-glutamyl"
+        }
+      ],
+      "reviewState": "已按原资料核对",
+      "reviewIssues": [],
+      "reviewNotes": [
+        "SAM的供甲基作用与产物分别考查，避免将多项事实捆绑为一个选项。"
+      ]
+    },
+    {
+      "id": "foundation-bio-cycles-g05",
+      "page": 2,
+      "title": "胆汁酸、胆素原、核糖体、G蛋白与Q循环",
+      "kind": "B",
+      "kindLabel": "B型题",
+      "topic": "代谢联系与循环",
+      "sourceText": "资料第2页·循环大串讲",
+      "sourcePage": 2,
+      "sourceOrder": 5,
+      "knowledgeIds": [
+        "bio-cycle-bile-acid",
+        "bio-cycle-urobilinogen",
+        "bio-cycle-ribosome",
+        "bio-cycle-gprotein",
+        "bio-cycle-q"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "label": "胆汁酸肠肝循环"
+        },
+        {
+          "key": "B",
+          "label": "胆素原肠肝循环"
+        },
+        {
+          "key": "C",
+          "label": "狭义核糖体循环"
+        },
+        {
+          "key": "D",
+          "label": "G蛋白循环"
+        },
+        {
+          "key": "E",
+          "label": "Q循环"
+        }
+      ],
+      "stems": [
+        {
+          "number": 1,
+          "text": "结合型胆汁酸在回肠重吸收，使有限的胆汁酸库存得以循环利用，属于：",
+          "answer": [
+            "A"
+          ],
+          "answerRaw": "A",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-bile-acid"
+        },
+        {
+          "number": 2,
+          "text": "肠道中的胆素原大部分随粪便排出，接触空气后形成粪胆素；少部分经重吸收参与循环，属于：",
+          "answer": [
+            "B"
+          ],
+          "answerRaw": "B",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-urobilinogen"
+        },
+        {
+          "number": 3,
+          "text": "以进位、成肽、转位为主要步骤的是：",
+          "answer": [
+            "C"
+          ],
+          "answerRaw": "C",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-ribosome"
+        },
+        {
+          "number": 4,
+          "text": "G蛋白结合GTP时有活性、结合GDP时无活性，且自身具有GTP酶活性，描述的是：",
+          "answer": [
+            "D"
+          ],
+          "answerRaw": "D",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-gprotein"
+        },
+        {
+          "number": 5,
+          "text": "泛醌/CoQ为双电子传递体、细胞色素c为单电子载体，复合体III借此完成电子传递的过程是：",
+          "answer": [
+            "E"
+          ],
+          "answerRaw": "E",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-q"
+        },
+        {
+          "number": 6,
+          "text": "霍乱毒素抑制G蛋白的GTP酶，使G蛋白持续活化并导致cAMP持续升高，涉及：",
+          "answer": [
+            "D"
+          ],
+          "answerRaw": "D",
+          "answerMode": "单选",
+          "knowledgeId": "bio-cycle-gprotein"
+        }
+      ],
+      "reviewState": "已按原资料核对；OCR残留已排除",
+      "reviewIssues": [
+        "胆素原段落含疑似OCR残留“uusx”，未纳入题干或答案。"
+      ],
+      "reviewNotes": [
+        "覆盖资料第2页列出的五类循环及G蛋白与霍乱毒素的联系。"
+      ]
+    }
+  ],
+  "coverageAudit": [
+    {
+      "sourcePage": 1,
+      "item": "三羧酸循环定位、枢纽作用、底物水平磷酸化、丙二酸竞争性抑制",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g01"
+      ]
+    },
+    {
+      "sourcePage": 1,
+      "item": "三羧酸循环关键酶名单",
+      "status": "原文未列具体名称，待核对，不凭空补题",
+      "groupIds": [
+        "foundation-bio-cycles-g01"
+      ]
+    },
+    {
+      "sourcePage": 1,
+      "item": "柠檬酸-丙酮酸循环运输、合成用途、NADPH",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g02"
+      ]
+    },
+    {
+      "sourcePage": 1,
+      "item": "乳酸循环功能、双胍类抑制与乳酸酸中毒",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g02"
+      ]
+    },
+    {
+      "sourcePage": 1,
+      "item": "嘌呤核苷酸循环、丙氨酸-葡萄糖循环、鸟氨酸循环",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g03"
+      ]
+    },
+    {
+      "sourcePage": 1,
+      "item": "SAM循环产物、γ-谷氨酰基循环功能",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g04"
+      ]
+    },
+    {
+      "sourcePage": 2,
+      "item": "胆汁酸肠肝循环、胆素原肠肝循环、核糖体循环、G蛋白循环、Q循环",
+      "status": "已出题",
+      "groupIds": [
+        "foundation-bio-cycles-g05"
+      ]
+    }
+  ]
+}

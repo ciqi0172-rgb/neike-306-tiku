@@ -28,20 +28,21 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.15.0
+          version: 11.9.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.13.0
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
 
       - name: Build static site
         env:
           BASE_PATH: /neike-306-tiku/
-        run: npm run build:pages
+        run: pnpm run build:pages
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
